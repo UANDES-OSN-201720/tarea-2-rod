@@ -14,11 +14,36 @@ how to use the page table and disk interfaces.
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
+int *frames;
+char algo[8];
 void page_fault_handler( struct page_table *pt, int page )
 {
-	printf("page fault on page #%d\n",page);
-	exit(1);
+	//aqui toca hacer el codigo, para empezar, hay que setear segun fifo y random la memoria dependiendo de cual es cual
+	//lo cual lo haremos haciendo uso de una variable global, yei vivan los paradigmas de programacion
+	//luego hay que verificar si la pagina esta cargada en memoria, si no en disco tocara
+	
+	int marc = page_table_get_npages(pt);
+	//char **marco;
+	//marco = (char**)malloc(sizeof(char *)*marc);
+
+	//for (int i =0; i < marc; i++){
+		//marco[i] = (char *)malloc(sizeof(char)*PAGE_SIZE);//crear una tabla con las direcciones de los marcos, puede ser que este mal
+	//}
+
+	//page_table_set_entry(pt, 1, 1, PROT_WRITE);
+	//char *virt = page_table_get_virtmem(pt);
+	//char *fisi = page_table_get_physmem(pt);
+	if(!(strcmp("rand", algo))){
+		//aqui va la ordenacion random
+		//hay que cer si los la pagina esta en los marcos, si no hay que fetchearla de disco
+		char *virt = page_table_get_virtmem(pt);
+		char *fisi = page_table_get_physmem(pt);
+		if (page_table_get_nframes(pt) < page_table_get_npages(pt)){//check si hay menos frames que paginas, por lo toc ahacer swap
+			//al parecer no entiendo bien el programa NO EJECUTAR!!! A MI ME CONSUMIO TODA LA MEMORIA Y TOCA REINICIAR
+		}
+	}
+	
+	
 }
 
 int main( int argc, char *argv[] )
@@ -32,7 +57,12 @@ int main( int argc, char *argv[] )
 	int npages = atoi(argv[1]);
 	int nframes = atoi(argv[2]);
 	const char *program = argv[4];
-
+	strcpy(algo, argv[3]);
+	frames = (malloc(sizeof(char)*nframes));
+	
+	for (int i =0; i < nframes; i++){
+		frames[i] = 0;//llena los espacios de marcos con cero, osea libre
+	} 
 	struct disk *disk = disk_open("myvirtualdisk",npages);
 	if(!disk) {
 		fprintf(stderr,"couldn't create virtual disk: %s\n",strerror(errno));
