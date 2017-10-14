@@ -42,7 +42,9 @@ void page_fault_handler( struct page_table *pt, int page )
 			//al parecer no entiendo bien el programa NO EJECUTAR!!! A MI ME CONSUMIO TODA LA MEMORIA Y TOCA REINICIAR
 		}
 	}
-	
+	else{
+		exit(1);
+	}
 	
 }
 
